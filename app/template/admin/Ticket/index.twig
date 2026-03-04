@@ -1,0 +1,77 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['ticket', 'ticket_balance'] %}
+
+{% block title %}チケット残高一覧{% endblock %}
+
+{% block sub_title %}チケット管理{% endblock %}
+
+{% block main %}
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-8">
+                                <span class="card-title">チケット残高一覧</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if pagination.totalItemCount > 0 %}
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0 pt-2 pb-2 ps-3">ID</th>
+                                        <th class="border-top-0 pt-2 pb-2">顧客名</th>
+                                        <th class="border-top-0 pt-2 pb-2">購入時間</th>
+                                        <th class="border-top-0 pt-2 pb-2">消化済み</th>
+                                        <th class="border-top-0 pt-2 pb-2">残り</th>
+                                        <th class="border-top-0 pt-2 pb-2">有効期限</th>
+                                        <th class="border-top-0 pt-2 pb-2">状態</th>
+                                        <th class="border-top-0 pt-2 pb-2">登録日</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for balance in pagination %}
+                                        <tr>
+                                            <td class="ps-3">{{ balance.id }}</td>
+                                            <td>
+                                                <a href="{{ url('admin_customer_edit', {id: balance.Customer.id}) }}">
+                                                    {{ balance.Customer.name01 }} {{ balance.Customer.name02 }}
+                                                </a>
+                                            </td>
+                                            <td>{{ balance.totalHours|number_format(1) }}h</td>
+                                            <td>{{ balance.usedHours|number_format(1) }}h</td>
+                                            <td>
+                                                <strong>{{ balance.remainingHours|number_format(1) }}h</strong>
+                                            </td>
+                                            <td>{{ balance.expiresAt|date('Y/m/d') }}</td>
+                                            <td>
+                                                {% if balance.expired %}
+                                                    <span class="badge bg-danger">期限切れ</span>
+                                                {% elseif balance.remainingHours <= 0 %}
+                                                    <span class="badge bg-secondary">消化済み</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">有効</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ balance.createDate|date('Y/m/d') }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {% include "@admin/pager.twig" with {"pages": pagination.paginationData} %}
+                        {% else %}
+                            <div class="card-body">
+                                <p class="text-center text-muted mb-0">チケット残高データがありません。</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

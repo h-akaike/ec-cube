@@ -1,0 +1,10 @@
+services:
+    Customize\Service\TicketService:
+        autowire: true
+        public: true
+
+    Customize\Service\PurchaseFlow\Processor\TicketGrantProcessor:
+        autowire: true
+        tags:
+            - { name: eccube.purchase.processor, flow_type: shopping, priority: 500 }
+            - { name: eccube.purchase.processor, flow_type: order, priority: 500 }

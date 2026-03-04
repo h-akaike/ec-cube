@@ -1,0 +1,74 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['ticket', 'ticket_usage'] %}
+
+{% block title %}消化履歴{% endblock %}
+
+{% block sub_title %}チケット管理{% endblock %}
+
+{% block main %}
+    <div class="c-contentsArea__cols">
+        <div class="c-contentsArea__primaryCol">
+            <div class="c-primaryCol">
+                <div class="card rounded border-0 mb-4">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-8">
+                                <span class="card-title">消化履歴一覧</span>
+                            </div>
+                            <div class="col-4 text-end">
+                                <a href="{{ url('admin_ticket_consume') }}" class="btn btn-ec-regular btn-sm">
+                                    <i class="fa fa-plus me-1"></i>消化を記録
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if pagination.totalItemCount > 0 %}
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="border-top-0 pt-2 pb-2 ps-3">ID</th>
+                                        <th class="border-top-0 pt-2 pb-2">顧客名</th>
+                                        <th class="border-top-0 pt-2 pb-2">消化時間</th>
+                                        <th class="border-top-0 pt-2 pb-2">サービス種別</th>
+                                        <th class="border-top-0 pt-2 pb-2">作業内容</th>
+                                        <th class="border-top-0 pt-2 pb-2">作業日</th>
+                                        <th class="border-top-0 pt-2 pb-2">担当者</th>
+                                        <th class="border-top-0 pt-2 pb-2">記録日</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for usage in pagination %}
+                                        <tr>
+                                            <td class="ps-3">{{ usage.id }}</td>
+                                            <td>
+                                                <a href="{{ url('admin_customer_edit', {id: usage.Customer.id}) }}">
+                                                    {{ usage.Customer.name01 }} {{ usage.Customer.name02 }}
+                                                </a>
+                                            </td>
+                                            <td>{{ usage.hours|number_format(1) }}h</td>
+                                            <td>
+                                                <span class="badge bg-info">{{ usage.serviceType }}</span>
+                                            </td>
+                                            <td>{{ usage.description|default('-')|truncate(30) }}</td>
+                                            <td>{{ usage.workDate|date('Y/m/d') }}</td>
+                                            <td>{{ usage.staffName }}</td>
+                                            <td>{{ usage.createDate|date('Y/m/d H:i') }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {% include "@admin/pager.twig" with {"pages": pagination.paginationData} %}
+                        {% else %}
+                            <div class="card-body">
+                                <p class="text-center text-muted mb-0">消化履歴がありません。</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

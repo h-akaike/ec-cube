@@ -1,0 +1,112 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['ticket', 'ticket_consume'] %}
+
+{% form_theme form '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title %}チケット消化記録{% endblock %}
+
+{% block sub_title %}チケット管理{% endblock %}
+
+{% block main %}
+    <form role="form" class="form-horizontal" name="ticket_consume_form" method="post" action="{{ url('admin_ticket_consume') }}">
+        {{ form_widget(form._token) }}
+        <div class="c-contentsArea__cols">
+            <div class="c-contentsArea__primaryCol">
+                <div class="c-primaryCol">
+                    <div class="card rounded border-0 mb-4">
+                        <div class="card-header">
+                            <span class="card-title">消化情報</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <span>顧客ID</span>
+                                    <span class="badge bg-primary ms-1">必須</span>
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(form.customer_id, {attr: {class: 'form-control', placeholder: '顧客IDを入力'}}) }}
+                                    {{ form_errors(form.customer_id) }}
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <span>消化時間数</span>
+                                    <span class="badge bg-primary ms-1">必須</span>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group" style="max-width: 200px;">
+                                        {{ form_widget(form.hours, {attr: {class: 'form-control', placeholder: '0.0', step: '0.5', min: '0.5'}}) }}
+                                        <span class="input-group-text">時間</span>
+                                    </div>
+                                    {{ form_errors(form.hours) }}
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <span>サービス種別</span>
+                                    <span class="badge bg-primary ms-1">必須</span>
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(form.service_type, {attr: {class: 'form-control'}}) }}
+                                    {{ form_errors(form.service_type) }}
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <span>作業内容</span>
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(form.description, {attr: {class: 'form-control', rows: 3, placeholder: '作業内容を入力してください'}}) }}
+                                    {{ form_errors(form.description) }}
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <span>作業実施日</span>
+                                    <span class="badge bg-primary ms-1">必須</span>
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(form.work_date, {attr: {class: 'form-control', style: 'max-width: 200px;'}}) }}
+                                    {{ form_errors(form.work_date) }}
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <span>担当者名</span>
+                                    <span class="badge bg-primary ms-1">必須</span>
+                                </div>
+                                <div class="col">
+                                    {{ form_widget(form.staff_name, {attr: {class: 'form-control', placeholder: '担当者名を入力', style: 'max-width: 300px;'}}) }}
+                                    {{ form_errors(form.staff_name) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="c-conversionArea">
+                    <div class="c-conversionArea__container">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-6">
+                                <a class="c-baseLink" href="{{ url('admin_ticket_usage') }}">
+                                    <i class="fa fa-backward me-1"></i>消化履歴へ戻る
+                                </a>
+                            </div>
+                            <div class="col-6 text-end">
+                                <button class="btn btn-ec-conversion px-5" type="submit">
+                                    消化を記録する
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
