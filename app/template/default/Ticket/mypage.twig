@@ -1,0 +1,100 @@
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'ticket' %}
+{% set body_class = 'mypage' %}
+
+{% block main %}
+    <div class="ec-layoutRole__main">
+        <div class="ec-mypageRole">
+            <div class="ec-pageHeader">
+                <h1>マイページ／チケット管理</h1>
+            </div>
+            {% include 'Mypage/navi.twig' %}
+        </div>
+
+        {# 残高サマリー #}
+        <div class="ec-mypageRole">
+            <div class="ec-off1Grid" style="margin-bottom: 2em;">
+                <div class="ec-off1Grid__cell" style="background: #f8f9fa; border-radius: 8px; padding: 2em; text-align: center;">
+                    <p style="font-size: 14px; color: #666; margin-bottom: 0.5em;">チケット残高</p>
+                    <p style="font-size: 48px; font-weight: bold; color: #333; margin: 0;">
+                        {{ remainingHours|number_format(1) }}
+                        <span style="font-size: 18px; color: #666;">時間</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {# パック別残高 #}
+        {% if balances|length > 0 %}
+        <div class="ec-mypageRole">
+            <h2 class="ec-rectHeading">
+                <span>パック別残高</span>
+            </h2>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 2em;">
+                    <thead>
+                        <tr style="background: #f5f5f5;">
+                            <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">購入時間</th>
+                            <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">消化済み</th>
+                            <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">残り</th>
+                            <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">有効期限</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for balance in balances %}
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 10px 12px;">{{ balance.totalHours|number_format(1) }}h</td>
+                                <td style="padding: 10px 12px;">{{ balance.usedHours|number_format(1) }}h</td>
+                                <td style="padding: 10px 12px;"><strong>{{ balance.remainingHours|number_format(1) }}h</strong></td>
+                                <td style="padding: 10px 12px;">{{ balance.expiresAt|date('Y年m月d日') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        {# 消化履歴 #}
+        <div class="ec-mypageRole">
+            <h2 class="ec-rectHeading">
+                <span>消化履歴</span>
+            </h2>
+            {% if usageHistory|length > 0 %}
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f5f5f5;">
+                                <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">作業日</th>
+                                <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">種別</th>
+                                <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">消化時間</th>
+                                <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">作業内容</th>
+                                <th style="padding: 10px 12px; text-align: left; border-bottom: 2px solid #ddd;">担当者</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usage in usageHistory %}
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 10px 12px;">{{ usage.workDate|date('Y/m/d') }}</td>
+                                    <td style="padding: 10px 12px;">
+                                        <span style="background: #e3f2fd; color: #1565c0; padding: 2px 8px; border-radius: 4px; font-size: 12px;">
+                                            {{ usage.serviceType }}
+                                        </span>
+                                    </td>
+                                    <td style="padding: 10px 12px;">{{ usage.hours|number_format(1) }}h</td>
+                                    <td style="padding: 10px 12px;">{{ usage.description|default('-') }}</td>
+                                    <td style="padding: 10px 12px;">{{ usage.staffName }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="ec-para-normal" style="text-align: center; padding: 2em; color: #999;">
+                    消化履歴はまだありません。
+                </p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
